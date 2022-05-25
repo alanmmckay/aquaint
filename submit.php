@@ -33,11 +33,11 @@
     <h1>Aquatint Image Processor</h1>
 
 <?php
-
-ini_set('display_errors',1);
+//git config --global --add safe.directory /var/www/html/aquatint
+//ini_set('display_errors',1);
 
     if(isset($_POST['submit'])){
-        echo '<h2><a href="submit.php">Create a new image</a></h2>';
+        echo '<h2><a href="submit.php">Process a new image</a></h2>';
         $target_dir = 'uploads/';
         $target_file = $target_dir . basename($_FILES['uploadImage']['name']);
         $uploadOK = 1;
@@ -95,7 +95,7 @@ ini_set('display_errors',1);
                 echo '<h3>Sorry, there was an error uploading your file.</h3>';
             }
         }
-        echo '<h2><a href="submit.php">Create a new image</a></h2>';
+        echo '<h2><a href="submit.php">Process a new image</a></h2>';
     }else{
 ?>
         <h2>Select a file to process:</h2>
@@ -138,7 +138,8 @@ ini_set('display_errors',1);
 
                 </script>
             </fieldset>
-            <input type='submit' value='Upload Image' name='submit'/>
+            <input type='submit' value='Upload Image' name='submit' onclick='document.getElementById("wait").innerHTML = "Please wait...";'/>
+            <p id='wait'></p>
         </form>
     </main>
     </body>
