@@ -100,9 +100,9 @@
 ?>
         <h2>Select a file to process:</h2>
         <form action='submit.php' method='post' enctype='multipart/form-data'>
-            <fieldset>
-            <!--label for='uploadImage'>Select File: </label-->
-            <input type='file' name='uploadImage' id='uploadImage'/>
+            <fieldset style='min-width:432px;'>
+            <input type='file' name='uploadImage' id='uploadImage' />
+            <label for='uploadImage' style='font-size:12px;float:right;'><b>File size: Less than 1 megabyte</b></label>
             </fieldset>
             <fieldset class='range'>
                 <label for='greycut'>Greycut</label><br>
@@ -138,9 +138,12 @@
 
                 </script>
             </fieldset>
-            <input type='submit' value='Upload Image' name='submit' onclick='document.getElementById("wait").innerHTML = "Please wait...";'/>
-            <p id='wait'></p>
+            <input type='submit' value='Upload Image' name='submit' style='float:left;' onclick='document.getElementById("wait").innerHTML = "Please wait...";'/>
+            <p id='wait' style='float:left;'></p>
         </form>
+    <h5 style='clear:both'>
+        --Note: This service is still in development.
+    </h5>
     </main>
     </body>
 </html>
