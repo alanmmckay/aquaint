@@ -65,7 +65,7 @@
         }
 
         if($uploadOk == 0){
-            echo '<h3>Sorry, your file was not uploaded.<h3>';
+            echo '<h3>Your file was not uploaded.<h3>';
         }else{
             if (move_uploaded_file($_FILES['uploadImage']['tmp_name'], $target_file)){
                 echo 'The file '.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' has been uploaded.';
@@ -88,11 +88,11 @@
                     echo '<h4>Original Image: </h4>';
                     echo '<img src="'.$target_dir.$prefix.'.'.$suffix.'"/>';
                 }else{
-                    echo 'nope';
+                    echo '<h3>There seems to have been a problem processing the file</h3>';
                 }
 
             }else{
-                echo '<h3>Sorry, there was an error uploading your file.</h3>';
+                echo '<h3>There was an error uploading your file.</h3>';
             }
         }
         echo '<h2><a href="submit.php">Process a new image</a></h2>';
