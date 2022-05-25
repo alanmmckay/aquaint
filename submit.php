@@ -5,12 +5,26 @@
             main{
                 width:75%;
                 margin:auto;
+                max-width:800px;
             }
             form{
                 margin:auto;
             }
             img{
                 width:100%;
+            }
+
+            form p{
+                margin:1%;
+                margin-bottom:3%;
+                margin-top:0%;
+            }
+            .range input{
+                width:400px;
+            }
+            .range{
+                /*text-align:center;*/
+                padding-left:40px;
             }
         </style>
     </head>
@@ -33,15 +47,17 @@ ini_set('display_errors',1);
         if($check !== false){
             //echo "File is an image - " . $check['mime'] . '.';
             $uploadOk = 1;
+
+            if($_FILES['uploadImage']['size'] > 1048576){
+                echo '<h2>Warning! Sorry, your file is too large.</h2>';
+                $uploadOk = 0;
+            }
+
         }else{
             echo '<h2>Warning! File is not an image.</h2>';
             $uploadOk = 0;
         }
 
-        if($_FILES['uploadImage']['size'] > 500000){
-            echo '<h2>Warning! Sorry, your file is too large.</h2>';
-            $uploadOk = 0;
-        }
 
         if($imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'jpeg' && $imageFileType != 'gif'){
             echo '<h2>Warning! Only jpg, jpeg, png, and gif files are allowed.</h2>';
@@ -54,8 +70,12 @@ ini_set('display_errors',1);
             if (move_uploaded_file($_FILES['uploadImage']['tmp_name'], $target_file)){
                 echo 'The file '.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' has been uploaded.';
 
-
-                $runScript = exec('python3 aquatintScript.py uploads/'.htmlspecialchars(basename($_FILES['uploadImage']['name'])));
+                $script = 'python3 aquatintScript.py uploads/';
+                $script = $script.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' ';
+                $script = $script.$_POST['greycut'].' ';
+                $script = $script.$_POST['temperature'].' ';
+                $script = $script.$_POST['totalsweeps'];
+                $runScript = exec($script);
                 if($runScript == true){
                     $fileName = pathinfo($target_file);
                     $prefix = strtolower($fileName['filename']);
@@ -80,7 +100,44 @@ ini_set('display_errors',1);
 ?>
         <h2>Select a file to process:</h2>
         <form action='submit.php' method='post' enctype='multipart/form-data'>
+            <fieldset>
+            <!--label for='uploadImage'>Select File: </label-->
             <input type='file' name='uploadImage' id='uploadImage'/>
+            </fieldset>
+            <fieldset class='range'>
+                <label for='greycut'>Greycut</label><br>
+                <input type='range' min='0' max='1' value='.5' name='greycut' id='greycut' step='.01'/>
+                <p>Value: <span id='greycutVal'></span></p>
+                <label for='temperature'>Temperature</label><br>
+                <input type='range' min='0.1' max='10' value='5' name='temperature' id='temperature' step='0.1'/>
+                <p>Value: <span id='temperatureVal'></span></p>
+                <label for='totalsweeps'>Total Sweeps</label><br>
+                <input type='range' min='1' max='10' value='5' name='totalsweeps' id='totalsweeps' step='1'/>
+                <p>Value: <span id='totalsweepsVal'></span></p>
+                <script>
+
+                    var greySlider = document.getElementById('greycut');
+                    var greyOutput = document.getElementById('greycutVal');
+                    greyOutput.innerHTML = greySlider.value;
+                    var tempSlider = document.getElementById('temperature');
+                    var tempOutput = document.getElementById('temperatureVal');
+                    tempOutput.innerHTML = tempSlider.value;
+                    var sweepSlider = document.getElementById('totalsweeps');
+                    var sweepOutput = document.getElementById('totalsweepsVal');
+                    sweepOutput.innerHTML = sweepSlider.value;
+
+                    greySlider.oninput = function(){
+                        greyOutput.innerHTML = greySlider.value;
+                    }
+                    tempSlider.oninput = function(){
+                        tempOutput.innerHTML = tempSlider.value;
+                    }
+                    sweepSlider.oninput = function(){
+                        sweepOutput.innerHTML = sweepSlider.value;
+                    }
+
+                </script>
+            </fieldset>
             <input type='submit' value='Upload Image' name='submit'/>
         </form>
     </main>

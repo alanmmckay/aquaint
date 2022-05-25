@@ -3,6 +3,9 @@
 
 import sys
 filename = sys.argv[1]
+greycut = float(sys.argv[2])
+temperature = float(sys.argv[3])
+totalsweeps = int(sys.argv[4])
 
 import numpy as np
 import matplotlib as mpl
@@ -40,7 +43,7 @@ hsimage=plt.imshow(dsqin,cmap='Greys',aspect=1,interpolation='none')
 plt.colorbar(hsimage)
 plt.show(hsimage)    
 
-greycut=0.79
+#greycut=0.79
 
 #################################
 
@@ -57,8 +60,8 @@ hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
 plt.colorbar(hsimage)
 plt.show(hsimage)  
 
-temperature=2.5
-totalsweeps=2
+#temperature=2.5
+#totalsweeps=2
 sth=1
 ########################
 Nx=Niy
