@@ -78,8 +78,8 @@
                 $runScript = exec($script);
                 if($runScript == true){
                     $fileName = pathinfo($target_file);
-                    $prefix = strtolower($fileName['filename']);
-                    $suffix = strtolower($fileName['extension']);
+                    $prefix = $fileName['filename'];
+                    $suffix = $fileName['extension'];
                     //echo $prefix;
                     //echo $suffix;
                     echo '<h3>Success! View image <a href="'.$target_dir.$prefix.'-acq.jpg">here</a></h2>';
