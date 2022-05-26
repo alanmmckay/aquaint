@@ -76,12 +76,10 @@
                 $script = $script.$_POST['temperature'].' ';
                 $script = $script.$_POST['totalsweeps'];
                 $runScript = exec($script);
-                if($runScript == true){
-                    $fileName = pathinfo($target_file);
-                    $prefix = $fileName['filename'];
-                    $suffix = $fileName['extension'];
-                    //echo $prefix;
-                    //echo $suffix;
+                $fileName = pathinfo($target_file);
+                $prefix = $fileName['filename'];
+                $suffix = $fileName['extension'];
+                if(file_exists($target_dir.$prefix.'-acq.jpg')){
                     echo '<h3>Success! View image <a href="'.$target_dir.$prefix.'-acq.jpg">here</a></h2>';
                     echo '<h4>New Image: </h4>';
                     echo '<img src="'.$target_dir.$prefix.'-acq.jpg"/>';

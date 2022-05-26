@@ -11,20 +11,20 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import scipy.misc
-import imageio
+#import imageio
 
 #---
 # Added these guys:
-from IPython import get_ipython
-from IPython.terminal.interactiveshell import TerminalInteractiveShell
-shell = TerminalInteractiveShell.instance()
+#from IPython import get_ipython
+#from IPython.terminal.interactiveshell import TerminalInteractiveShell
+#shell = TerminalInteractiveShell.instance()
+
+import imageio.v2 as imageio
 
 #moved this :
-get_ipython().run_line_magic('matplotlib', 'inline')
+#get_ipython().run_line_magic('matplotlib', 'inline')
 #---
 
-#provide the name of the file between quotes (like "eins.jpg")
-#filename = "publiceinstein.jpg"
 
 im2 = imageio.imread(filename)
 Nix=im2.shape[0]
@@ -39,11 +39,9 @@ for i in range(0,Nix):
             grayimage[i][j] = grayValue
             pass
 dsqin=1-grayimage/255.0
-hsimage=plt.imshow(dsqin,cmap='Greys',aspect=1,interpolation='none')
-plt.colorbar(hsimage)
-plt.show(hsimage)    
-
-#greycut=0.79
+#hsimage=plt.imshow(dsqin,cmap='Greys',aspect=1,interpolation='none')
+#plt.colorbar(hsimage)
+#plt.show(hsimage)
 
 #################################
 
@@ -53,15 +51,13 @@ hhbw=np.zeros(nsites)
 for jj in range(nsites):
             if nan[jj]<greycut: hhbw[jj]=-1
             else: hhbw[jj]=1
-            pass  
+            pass
 
 dsq=np.reshape(hhbw,(Nix,Niy))
-hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
-plt.colorbar(hsimage)
-plt.show(hsimage)  
+#hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
+#plt.colorbar(hsimage)
+#plt.show(hsimage)
 
-#temperature=2.5
-#totalsweeps=2
 sth=1
 ########################
 Nx=Niy
@@ -70,7 +66,7 @@ nsites=Nx*Ny
 beta=1/temperature
 
 v=np.zeros(nsites)
-sig=2*v-1   
+sig=2*v-1
 sumen=0
 
 for nsweeps in range(totalsweeps):
@@ -89,16 +85,18 @@ for nsweeps in range(totalsweeps):
         pass
     v=((sig+1)/2)
     dsq=np.reshape(v,(Ny,Nx))
-    hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
-    plt.axis('off')
-    plt.show(hsimage)
+    #hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
+    #plt.axis('off')
+    #plt.show(hsimage)
     pass
 
 hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
 plt.axis('off')
 #plt.savefig("mypict4.jpg",dpi=300)
 plt.savefig(filename.split('.')[-2]+'-acq.jpg',dpi=300)
-plt.show(hsimage)
+#plt.show(hsimage)
+plt.close()
+
 
 
 
