@@ -93,7 +93,7 @@ for nsweeps in range(totalsweeps):
 hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
 plt.axis('off')
 #plt.savefig("mypict4.jpg",dpi=300)
-plt.savefig(filename.split('.')[-2]+'-acq.jpg',dpi=300)
+plt.savefig(filename.split('.')[-2]+'-aquatint.jpg',dpi=300)
 #plt.show(hsimage)
 plt.close()
 

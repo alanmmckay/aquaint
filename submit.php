@@ -68,23 +68,26 @@
             echo '<h3>Your file was not uploaded.<h3>';
         }else{
             if (move_uploaded_file($_FILES['uploadImage']['tmp_name'], $target_file)){
-                echo 'The file '.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' has been uploaded.';
 
-                $script = 'python3 aquatintScript.py uploads/';
-                $script = $script.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' ';
-                $script = $script.$_POST['greycut'].' ';
-                $script = $script.$_POST['temperature'].' ';
-                $script = $script.$_POST['totalsweeps'];
-                $runScript = exec($script);
                 $fileName = pathinfo($target_file);
                 $prefix = $fileName['filename'];
                 $suffix = $fileName['extension'];
-                if(file_exists($target_dir.$prefix.'-acq.jpg')){
-                    echo '<h3>Success! View image <a href="'.$target_dir.$prefix.'-acq.jpg">here</a></h2>';
+                $new_file = $target_dir.$prefix.'-aquatint.jpg';
+
+                echo 'The file '.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' has been uploaded.';
+
+                $script = 'python3 aquatintScript.py "'.$target_file.'" ';
+                $script = $script.$_POST['greycut'].' ';
+                $script = $script.$_POST['temperature'].' ';
+                $script = $script.$_POST['totalsweeps'];
+                exec($script,$output);
+
+                if(count($output) == 0){
+                    echo '<h3>Success! View image <a href="'.$new_file.'">here</a></h2>';
                     echo '<h4>New Image: </h4>';
-                    echo '<img src="'.$target_dir.$prefix.'-acq.jpg"/>';
+                    echo '<img src="'.$new_file.'"/>';
                     echo '<h4>Original Image: </h4>';
-                    echo '<img src="'.$target_dir.$prefix.'.'.$suffix.'"/>';
+                    echo '<img src="'.$target_file.'"/>';
                 }else{
                     echo '<h3>There seems to have been a problem processing the file</h3>';
                 }
