@@ -80,9 +80,10 @@
                 $script = $script.$_POST['greycut'].' ';
                 $script = $script.$_POST['temperature'].' ';
                 $script = $script.$_POST['totalsweeps'];
-                exec($script,$output);
 
-                if(count($output) == 0){
+                exec($script,$output,$result);
+
+                if(count($output) == 0 and $result == 0){
                     echo '<h3>Success! View image <a href="'.$new_file.'">here</a></h2>';
                     echo '<h4>New Image: </h4>';
                     echo '<img src="'.$new_file.'"/>';
