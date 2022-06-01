@@ -18,6 +18,8 @@ im2 = imageio.imread(filename)
 Nix=im2.shape[0]
 Niy=im2.shape[1]
 grayimage=np.zeros([Nix,Niy])
+
+
 for i in range(0,Nix):
         for j in range(0,Niy):
             blueComponent = im2[i][j][0]
@@ -28,7 +30,7 @@ for i in range(0,Nix):
             pass
 dsqin=1-grayimage/255.0
 hsimage=plt.imshow(dsqin,cmap='Greys',aspect=1,interpolation='none')
-cb = plt.colorbar(hsimage)
+#cb = plt.colorbar(hsimage)
 plt.savefig(filename.split('.')[-2]+'-origin.jpg',dpi=300)
 
 #################################
@@ -77,7 +79,7 @@ for nsweeps in range(totalsweeps):
     pass
 
 hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
-cb.remove()
+#cb.remove()
 plt.axis('off')
 plt.savefig(filename.split('.')[-2]+'-aquatint.jpg',dpi=300)
 plt.close()

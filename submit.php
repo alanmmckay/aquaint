@@ -87,6 +87,24 @@
                     echo '<h3>Success! View image <a href="'.$new_file.'">here</a></h2>';
                     echo '<h4>New Image: </h4>';
                     echo '<img src="'.$new_file.'"/>';
+                    echo '<hr>';
+                    echo '<h3>Progression:</h3>';
+                    echo '<h4>Application of Greyscale:</h4>';
+                    echo '<img src="uploads/'.$prefix.'-origin.jpg" />';
+                    echo '<h4>Application of Greycut:</h4>';
+                    echo '<img src="uploads/'.$prefix.'-greycut.jpg">';
+                    echo '<h4>Application of Sweeps:</h4>';
+                    echo '<img src="uploads/'.$prefix.'-sweep0.jpg" id="sweep0" />';
+                    for ($i = 1; $i < $_POST['totalsweeps']; $i++){
+                        echo '<img src="uploads/'.$prefix.'-sweep'.$i.'.jpg" id="sweep'.$i.'" style="display:none;" />';
+                    }
+
+                    $val = $_POST['totalsweeps'] - 1;
+                    echo '<input type="range" min="0" max="'.$val.'" id="sweepSlider" />';
+
+                    echo '<h4>Finished image:</h4>';
+                    echo '<img src="'.$new_file.'"/>';
+                    echo '<hr>';
                     echo '<h4>Original Image: </h4>';
                     echo '<img src="'.$target_file.'"/>';
                 }else{
