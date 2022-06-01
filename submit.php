@@ -126,35 +126,26 @@
             </fieldset>
             <fieldset class='range'>
                 <label for='greycut'>Greycut</label><br>
-                <input type='range' min='0' max='1' value='.5' name='greycut' id='greycut' step='.01'/>
+                <input type='range' min='0' max='1' value='.5' name='greycut' id='greycut' step='.01' oninput='setSliderVal("greycut");' />
                 <p>Value: <span id='greycutVal'></span></p>
                 <label for='temperature'>Temperature</label><br>
-                <input type='range' min='0.1' max='10' value='5' name='temperature' id='temperature' step='0.1'/>
+                <input type='range' min='0.1' max='10' value='5' name='temperature' id='temperature' step='0.1' oninput='setSliderVal("temperature");' />
                 <p>Value: <span id='temperatureVal'></span></p>
                 <label for='totalsweeps'>Total Sweeps</label><br>
-                <input type='range' min='1' max='10' value='5' name='totalsweeps' id='totalsweeps' step='1'/>
+                <input type='range' min='1' max='10' value='5' name='totalsweeps' id='totalsweeps' step='1' oninput='setSliderVal("totalsweeps");' />
                 <p>Value: <span id='totalsweepsVal'></span></p>
                 <script>
 
-                    var greySlider = document.getElementById('greycut');
-                    var greyOutput = document.getElementById('greycutVal');
-                    greyOutput.innerHTML = greySlider.value;
-                    var tempSlider = document.getElementById('temperature');
-                    var tempOutput = document.getElementById('temperatureVal');
-                    tempOutput.innerHTML = tempSlider.value;
-                    var sweepSlider = document.getElementById('totalsweeps');
-                    var sweepOutput = document.getElementById('totalsweepsVal');
-                    sweepOutput.innerHTML = sweepSlider.value;
+                    setSliderVal = function(sliderName){
+                        slider = document.getElementById(sliderName);
+                        output = document.getElementById(sliderName+'Val');
+                        output.innerHTML = slider.value;
+                    }
 
-                    greySlider.oninput = function(){
-                        greyOutput.innerHTML = greySlider.value;
-                    }
-                    tempSlider.oninput = function(){
-                        tempOutput.innerHTML = tempSlider.value;
-                    }
-                    sweepSlider.oninput = function(){
-                        sweepOutput.innerHTML = sweepSlider.value;
-                    }
+                    setSliderVal('greycut');
+                    setSliderVal('temperature');
+                    setSliderVal('totalsweeps');
+
 
                 </script>
             </fieldset>
