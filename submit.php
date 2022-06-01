@@ -195,7 +195,7 @@
         //window.onload = function(){
         setSliderVal('greycut',0);
         setSliderVal('temperature',0);
-        setSliderVal('totalsweeps'),0;
+        setSliderVal('totalsweeps',0);
         //}
 <?php
     }
