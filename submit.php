@@ -134,30 +134,29 @@
                 <label for='totalsweeps'>Total Sweeps</label><br>
                 <input type='range' min='1' max='10' value='5' name='totalsweeps' id='totalsweeps' step='1' oninput='setSliderVal("totalsweeps");' />
                 <p>Value: <span id='totalsweepsVal'></span></p>
-                <script>
 
-                    setSliderVal = function(sliderName){
-                        slider = document.getElementById(sliderName);
-                        output = document.getElementById(sliderName+'Val');
-                        output.innerHTML = slider.value;
-                    }
-
-                    setSliderVal('greycut');
-                    setSliderVal('temperature');
-                    setSliderVal('totalsweeps');
-
-
-                </script>
             </fieldset>
             <input type='submit' value='Upload Image' name='submit' style='float:left;' onclick='document.getElementById("wait").innerHTML = "Please wait...";'/>
             <p id='wait' style='float:left;'></p>
         </form>
-    <h5 style='clear:both'>
-        --Note: This service is still in development.
-    </h5>
-    </main>
-    </body>
-</html>
 <?php
     }
 ?>
+    <h5 style='clear:both'>
+        --Note: This service is still in development.
+    </h5>
+    <script>
+        setSliderVal = function(sliderName){
+            slider = document.getElementById(sliderName);
+            output = document.getElementById(sliderName+'Val');
+            output.innerHTML = slider.value;
+        }
+
+        setSliderVal('greycut');
+        setSliderVal('temperature');
+        setSliderVal('totalsweeps');
+
+    </script>
+    </main>
+    </body>
+</html>
