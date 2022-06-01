@@ -11,7 +11,8 @@
                 margin:auto;
             }
             img{
-                width:100%;
+                width:95%;
+                margin: 1%
             }
 
             form p{
@@ -93,20 +94,25 @@
                     echo '<img src="uploads/'.$prefix.'-origin.jpg" />';
                     echo '<h4>Application of Greycut:</h4>';
                     echo '<img src="uploads/'.$prefix.'-greycut.jpg">';
+
+                    echo '<div class="range" style="margin:25px;border-top:solid grey 1px;border-bottom:solid grey 1px;">';
                     echo '<h4>Application of Sweeps:</h4>';
+
+                    $val = $_POST['totalsweeps'] - 1;
+                    $functionCall = "displayImage('sweepSlider',".$val.")";
+                    echo 'Min:1 <input type="range" min="0" max="'.$val.'" id="sweepSlider" value="0" oninput="'.$functionCall.';"/> Max:'.$_POST['totalsweeps'];
+                    echo '<p>Sweep iteration: <span id="sweepSliderVal"></span></p>';
+
                     echo '<img src="uploads/'.$prefix.'-sweep0.jpg" id="sweep0" />';
                     for ($i = 1; $i < $_POST['totalsweeps']; $i++){
                         echo '<img src="uploads/'.$prefix.'-sweep'.$i.'.jpg" id="sweep'.$i.'" style="display:none;" />';
                     }
-
-                    $val = $_POST['totalsweeps'] - 1;
-                    echo '<input type="range" min="0" max="'.$val.'" id="sweepSlider" />';
-
+                    echo '</div>';
                     echo '<h4>Finished image:</h4>';
                     echo '<img src="'.$new_file.'"/>';
                     echo '<hr>';
-                    echo '<h4>Original Image: </h4>';
-                    echo '<img src="'.$target_file.'"/>';
+                    /*echo '<h4>Original Image: </h4>';
+                    echo '<img src="'.$target_file.'"/>';*/
                 }else{
                     echo '<h3>There seems to have been a problem processing the file</h3>';
                 }
@@ -126,13 +132,13 @@
             </fieldset>
             <fieldset class='range'>
                 <label for='greycut'>Greycut</label><br>
-                <input type='range' min='0' max='1' value='.5' name='greycut' id='greycut' step='.01' oninput='setSliderVal("greycut");' />
+                <input type='range' min='0' max='1' value='.5' name='greycut' id='greycut' step='.01' oninput='setSliderVal("greycut",0);' />
                 <p>Value: <span id='greycutVal'></span></p>
                 <label for='temperature'>Temperature</label><br>
-                <input type='range' min='0.1' max='10' value='5' name='temperature' id='temperature' step='0.1' oninput='setSliderVal("temperature");' />
+                <input type='range' min='0.1' max='10' value='5' name='temperature' id='temperature' step='0.1' oninput='setSliderVal("temperature",0);' />
                 <p>Value: <span id='temperatureVal'></span></p>
                 <label for='totalsweeps'>Total Sweeps</label><br>
-                <input type='range' min='1' max='10' value='5' name='totalsweeps' id='totalsweeps' step='1' oninput='setSliderVal("totalsweeps");' />
+                <input type='range' min='1' max='10' value='5' name='totalsweeps' id='totalsweeps' step='1' oninput='setSliderVal("totalsweeps",0);' />
                 <p>Value: <span id='totalsweepsVal'></span></p>
 
             </fieldset>
@@ -146,16 +152,54 @@
         --Note: This service is still in development.
     </h5>
     <script>
-        setSliderVal = function(sliderName){
+
+        setSliderVal = function(sliderName,scew){
             slider = document.getElementById(sliderName);
             output = document.getElementById(sliderName+'Val');
-            output.innerHTML = slider.value;
+            output.innerHTML =  Number(slider.value)+scew;
+            return (Number(slider.value) + scew);
         }
 
-        setSliderVal('greycut');
-        setSliderVal('temperature');
-        setSliderVal('totalsweeps');
+        displayImage = function(sliderName,max){
+            var val = setSliderVal(sliderName,1);
+            val = val - 1;
+            var adjacents = [];
+            if(val > 0){
+                adjacents.push(Number(val - 1));
+            }
+            if(val < max - 1){
+                adjacents.push(Number(val + 1));
+            }
 
+            for(let i = 0; i <= max; i++){
+                imageID = 'sweep'+i;
+                image = document.getElementById(imageID);
+                if(image){
+                    image.style.display = 'none';
+                }
+            }
+
+            imageID = 'sweep'+val;
+            image = document.getElementById(imageID);
+            if(image){
+                image.style.display = 'block';
+            }
+        }
+<?php
+    if(isset($_POST['submit'])){
+?>
+        displayImage('sweepSlider',4);
+<?php
+    }else{
+?>
+        //window.onload = function(){
+        setSliderVal('greycut',0);
+        setSliderVal('temperature',0);
+        setSliderVal('totalsweeps'),0;
+        //}
+<?php
+    }
+?>
     </script>
     </main>
     </body>
