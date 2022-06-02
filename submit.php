@@ -31,7 +31,7 @@
     </head>
     <body>
     <main>
-    <h1>Aquatint Image Processor</h1>
+        <h1>Aquatint Image Processor</h1>
 
 <?php
 //git config --global --add safe.directory /var/www/html/aquatint
@@ -46,19 +46,15 @@
         $check = getimagesize($_FILES['uploadImage']['tmp_name']);
 
         if($check !== false){
-            //echo "File is an image - " . $check['mime'] . '.';
             $uploadOk = 1;
-
             if($_FILES['uploadImage']['size'] > 1048576){
                 echo '<h2>Warning! Sorry, your file is too large.</h2>';
                 $uploadOk = 0;
             }
-
         }else{
             echo '<h2>Warning! File is not an image.</h2>';
             $uploadOk = 0;
         }
-
 
         if($imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'jpeg' && $imageFileType != 'gif'){
             echo '<h2>Warning! Only jpg, jpeg, png, and gif files are allowed.</h2>';
@@ -85,38 +81,40 @@
                 exec($script,$output,$result);
 
                 if(count($output) == 0 and $result == 0){
-                    echo '<h3>Success! View image <a href="'.$new_file.'">here</a></h2>';
-                    echo '<h4>New Image: </h4>';
-                    echo '<img src="'.$new_file.'"/>';
-                    echo '<hr>';
-                    echo '<h3>Progression:</h3>';
-                    echo '<h4>Application of Greyscale:</h4>';
-                    echo '<img src="uploads/'.$prefix.'-origin.jpg" />';
-                    echo '<h4>Application of Greycut:</h4>';
-                    echo '<img src="uploads/'.$prefix.'-greycut.jpg">';
+?>
+        <h3>Success! View image <a href="<?php echo $new_file; ?>">here</a></h2>
+        <h4>New Image: </h4>
+        <img src="<?php echo $new_file;?>" />
+        <hr>
+        <h3>Progression: </h3>
+        <h4>Application of Greyscale: </h4>
+        <img src="uploads/<?php echo $prefix; ?>-origin.jpg" />
+        <h4>Application of Greycut: </h4>
+        <img src="uploads/<?php echo $prefix; ?>-greycut.jpg">
 
-                    echo '<div class="range" style="margin:25px;border-top:solid grey 1px;border-bottom:solid grey 1px;">';
-                    echo '<h4>Application of Sweeps:</h4>';
+        <div class="range" style="margin:25px;border-top:solid grey 1px;border-bottom:solid grey 1px;">
+        <h4>Application of Sweeps: </h4>
 
+<?php
                     $val = $_POST['totalsweeps'] - 1;
                     $functionCall = "displayImage('sweepSlider',".$val.")";
                     echo 'Min:1 <input type="range" min="0" max="'.$val.'" id="sweepSlider" value="0" oninput="'.$functionCall.';"/> Max:'.$_POST['totalsweeps'];
-                    echo '<p>Sweep iteration: <span id="sweepSliderVal"></span></p>';
-
-                    echo '<img src="uploads/'.$prefix.'-sweep0.jpg" id="sweep0" />';
+?>
+                    <p>Sweep iteration: <span id="sweepSliderVal"></span></p>
+                    <img src="uploads/<?php echo $prefix; ?>-sweep0.jpg" id="sweep0" />
+<?php
                     for ($i = 1; $i < $_POST['totalsweeps']; $i++){
                         echo '<img src="uploads/'.$prefix.'-sweep'.$i.'.jpg" id="sweep'.$i.'" style="display:none;" />';
                     }
-                    echo '</div>';
-                    echo '<h4>Finished image:</h4>';
-                    echo '<img src="'.$new_file.'"/>';
-                    echo '<hr>';
-                    /*echo '<h4>Original Image: </h4>';
-                    echo '<img src="'.$target_file.'"/>';*/
-                }else{
-                    echo '<h3>There seems to have been a problem processing the file</h3>';
-                }
-
+?>
+        </div>
+        <h4>Finished image: </h4>
+        <img src="<?php echo $new_file; ?>" />
+        <hr>
+<?php
+        }else{
+            echo '<h3>There seems to have been a problem processing the file</h3>';
+        }
             }else{
                 echo '<h3>There was an error uploading your file.</h3>';
             }
