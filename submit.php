@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <style>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' href='bootstrap/css/bootstrap.min.css'>
+        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+        <script src='bootstrap/js/bootstrap.min.js'></script>
+        <!--style>
             main{
                 width:75%;
                 margin:auto;
@@ -27,18 +31,19 @@
                 /*text-align:center;*/
                 padding-left:40px;
             }
-        </style>
+        </style-->
     </head>
     <body>
-    <main>
-        <h1>Aquatint Image Processor</h1>
+    <div class='container' style='max-width:800px;margin-top:15px;'>
+        <header class='page-header'>
+            <h1>Aquatint Image Processor</h1>
+        </header>
 
 <?php
 //git config --global --add safe.directory /var/www/html/aquatint
 //ini_set('display_errors',1);
 
     if(isset($_POST['submit'])){
-        echo '<h2><a href="submit.php">Process a new image</a></h2>';
         $target_dir = 'uploads/';
         $target_file = $target_dir . basename($_FILES['uploadImage']['name']);
         $uploadOK = 1;
@@ -48,22 +53,23 @@
         if($check !== false){
             $uploadOk = 1;
             if($_FILES['uploadImage']['size'] > 1048576){
-                echo '<h2>Warning! Sorry, your file is too large.</h2>';
+                echo '<div class="alert alert-danger"><strong>Warning!</strong> Sorry, your file is too large.</div>';
                 $uploadOk = 0;
             }
         }else{
-            echo '<h2>Warning! File is not an image.</h2>';
+            echo '<div class="alert alert-danger"><strong>Warning!</strong> File is not an image.</div>';
             $uploadOk = 0;
         }
 
         if($imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'jpeg' && $imageFileType != 'gif'){
-            echo '<h2>Warning! Only jpg, jpeg, png, and gif files are allowed.</h2>';
+            echo '<div class="alert alert-danger"><strong>Warning!</strong> Only jpg, jpeg, png, and gif files are allowed.</div>';
             $uploadOk = 0;
         }
 
         if($uploadOk == 0){
-            echo '<h3>Your file was not uploaded.<h3>';
+            echo '<div class="alert alert-warning">Your file was not uploaded.</div>';
         }else{
+            echo '<div class="alert alert-info"><a href="submit.php" class="alert-link">Process a new image</a></div>';
             if (move_uploaded_file($_FILES['uploadImage']['tmp_name'], $target_file)){
 
                 $fileName = pathinfo($target_file);
@@ -71,7 +77,7 @@
                 $suffix = $fileName['extension'];
                 $new_file = $target_dir.$prefix.'-aquatint.jpg';
 
-                echo 'The file '.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' has been uploaded.';
+                //echo 'The file '.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' has been uploaded.';
 
                 $script = 'python3 aquatintScript.py "'.$target_file.'" ';
                 $script = $script.$_POST['greycut'].' ';
@@ -81,35 +87,41 @@
                 exec($script,$output,$result);
 
                 if(count($output) == 0 and $result == 0){
-?>
-        <h3>Success! View image <a href="<?php echo $new_file; ?>">here</a></h2>
-        <h4>New Image: </h4>
-        <img src="<?php echo $new_file;?>" />
-        <hr>
-        <h3>Progression: </h3>
-        <h4>Application of Greyscale: </h4>
-        <img src="uploads/<?php echo $prefix; ?>-origin.jpg" />
-        <h4>Application of Greycut: </h4>
-        <img src="uploads/<?php echo $prefix; ?>-greycut.jpg">
 
-        <div class="range" style="margin:25px;border-top:solid grey 1px;border-bottom:solid grey 1px;">
+?>
+        <div class='alert alert-success'><strong>Success!</strong> The file <?php echo htmlspecialchars(basename($_FILES['uploadImage']['name'])) ?> has been uploaded. <a href="<?php echo $new_file; ?>" class='alert-link' target='_blank' rel='noopener noreferrer'>View Transformed Image</a></div>
+        <h4>New Image: </h4>
+        <img src="<?php echo $new_file;?>" class='img-fluid' />
+
+        <hr>
+        <h3>Progression:</h3>
+        <h4>Application of Greyscale: </h4>
+        <img src="uploads/<?php echo $prefix; ?>-origin.jpg" class='img-fluid'/>
+        <h4>Application of Greycut: </h4>
+        <img src="uploads/<?php echo $prefix; ?>-greycut.jpg" class='img-fluid'/>
+        <div class="range" style="margin:25px;border-top:solid grey 1px;border-bottom:solid grey 1px;padding:5px;">
         <h4>Application of Sweeps: </h4>
 
 <?php
                     $val = $_POST['totalsweeps'] - 1;
                     $functionCall = "displayImage('sweepSlider',".$val.")";
-                    echo 'Min:1 <input type="range" min="0" max="'.$val.'" id="sweepSlider" value="0" oninput="'.$functionCall.';"/> Max:'.$_POST['totalsweeps'];
+                    echo '<div class="row">';
+                    echo '<div class="col-sm-1"> Min:1 </div>';
+                    echo '<div class="col-sm-10"><input class="form-control" type="range" min="0" max="'.$val.'" id="sweepSlider" value="0" oninput="'.$functionCall.';"/></div>';
+                    echo '<div class="col-sm-1"> Max:'.$_POST['totalsweeps'].' </div>';
+                    echo '</div>';
 ?>
                     <p>Sweep iteration: <span id="sweepSliderVal"></span></p>
-                    <img src="uploads/<?php echo $prefix; ?>-sweep0.jpg" id="sweep0" />
+                    </form>
+                    <img src="uploads/<?php echo $prefix; ?>-sweep0.jpg" id="sweep0" class='img-fluid'/>
 <?php
                     for ($i = 1; $i < $_POST['totalsweeps']; $i++){
-                        echo '<img src="uploads/'.$prefix.'-sweep'.$i.'.jpg" id="sweep'.$i.'" style="display:none;" />';
+                        echo '<img src="uploads/'.$prefix.'-sweep'.$i.'.jpg" id="sweep'.$i.'" style="display:none;" class="img-fluid" />';
                     }
 ?>
         </div>
         <h4>Finished image: </h4>
-        <img src="<?php echo $new_file; ?>" />
+        <img src="<?php echo $new_file; ?>" class='img-fluid' />
         <hr>
 <?php
         }else{
@@ -119,36 +131,47 @@
                 echo '<h3>There was an error uploading your file.</h3>';
             }
         }
-        echo '<h2><a href="submit.php">Process a new image</a></h2>';
+        echo '<div class="alert alert-info"><a href="submit.php" class="alert-link">Process a new image</a></div>';
     }else{
 ?>
-        <h2>Select a file to process:</h2>
         <form action='submit.php' method='post' enctype='multipart/form-data'>
-            <fieldset style='min-width:432px;'>
-            <input type='file' name='uploadImage' id='uploadImage' />
-            <label for='uploadImage' style='font-size:12px;float:right;'><b>File size: Less than 1 megabyte</b></label>
-            </fieldset>
-            <fieldset class='range'>
-                <label for='greycut'>Greycut</label><br>
-                <input type='range' min='0' max='1' value='.5' name='greycut' id='greycut' step='.01' oninput='setSliderVal("greycut",0);' />
-                <p>Value: <span id='greycutVal'></span></p>
-                <label for='temperature'>Temperature</label><br>
-                <input type='range' min='0.1' max='10' value='5' name='temperature' id='temperature' step='0.1' oninput='setSliderVal("temperature",0);' />
-                <p>Value: <span id='temperatureVal'></span></p>
-                <label for='totalsweeps'>Total Sweeps</label><br>
-                <input type='range' min='1' max='10' value='5' name='totalsweeps' id='totalsweeps' step='1' oninput='setSliderVal("totalsweeps",0);' />
-                <p>Value: <span id='totalsweepsVal'></span></p>
+            <div class='form-group'>
+                <label for='uploadImage'>Select a file to process:</label>
+                <input class='form-control' type='file' name='uploadImage' id='uploadImage' />
+                <p for='uploadImage'><b>File size: Less than 1 megabyte</b></p>
+            </div>
 
-            </fieldset>
-            <input type='submit' value='Upload Image' name='submit' style='float:left;' onclick='document.getElementById("wait").innerHTML = "Please wait...";'/>
-            <p id='wait' style='float:left;'></p>
+            <div class='form-group'>
+                <label for='greycut'>Greycut:</label><br>
+                <input class='form-control' type='range' min='0' max='1' value='0.50' name='greycut' id='greycut' step='.01' oninput='setSliderVal("greycut",0);' />
+                <p>Value: <span id='greycutVal'></span></p>
+            </div>
+
+            <div class='form-group'>
+                <label for='temperature'>Temperature:</label><br>
+                <input class='form-control' type='range' min='0.1' max='10' value='5.0' name='temperature' id='temperature' step='0.1' oninput='setSliderVal("temperature",0);' />
+                <p>Value: <span id='temperatureVal'></span></p>
+            </div>
+
+            <div class='form-group'>
+                <label for='totalsweeps'>Total Sweeps:</label><br>
+                <input class='form-control' type='range' min='1' max='10' value='0' name='totalsweeps' id='totalsweeps' step='1' oninput='setSliderVal("totalsweeps",0);' />
+                <p>Value: <span id='totalsweepsVal'></span></p>
+            </div>
+
+            <div class='form-group' style='clear:both'>
+                <input type='submit' value='Upload Image' name='submit' onclick='document.getElementById("wait").style.visibility = "visible";' style='float:left'/>
+                <p id='wait' style='visibility:hidden;float:left;margin-left:10px;'><b>Please wait...</b></p>
+            </div>
         </form>
+
 <?php
     }
 ?>
-    <h5 style='clear:both'>
-        --Note: This service is still in development.
-    </h5>
+    <br>
+    <div class='alert alert-info' style='clear:both' >
+        <strong>Note:</strong> This service is still in development.
+    </div>
     <script>
 
         setSliderVal = function(sliderName,scew){
@@ -199,6 +222,6 @@
     }
 ?>
     </script>
-    </main>
+    </div>
     </body>
 </html>
