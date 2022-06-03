@@ -4,7 +4,6 @@
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <script src='bootstrap/js/bootstrap.min.js'></script>
         <!--style>
             main{
                 width:75%;
@@ -48,7 +47,8 @@
         $target_file = $target_dir . basename($_FILES['uploadImage']['name']);
         $uploadOK = 1;
         $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-        $check = getimagesize($_FILES['uploadImage']['tmp_name']);
+        $check = exif_imagetype($_FILES['uploadImage']['tmp_name']);
+        $mimeType = image_type_to_mime_type($_FILES['uploadImage']['tmp_name']);
 
         if($check !== false){
             $uploadOk = 1;
@@ -61,7 +61,7 @@
             $uploadOk = 0;
         }
 
-        if($imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'jpeg' && $imageFileType != 'gif'){
+        if($imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'jpeg' && $imageFileType != 'gif' && $mimeType == 'image/gif' && $mimeType == 'image/jpeg' && $mimeType == 'image/png'){
             echo '<div class="alert alert-danger"><strong>Warning!</strong> Only jpg, jpeg, png, and gif files are allowed.</div>';
             $uploadOk = 0;
         }
