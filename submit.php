@@ -40,9 +40,9 @@
 
 <?php
 //git config --global --add safe.directory /var/www/html/aquatint
-ini_set('display_errors', '1');
+/*ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+error_reporting(E_ALL);*/
 
     if(isset($_POST['submit'])){
         $target_dir = 'uploads/';
@@ -58,9 +58,6 @@ error_reporting(E_ALL);
         }
 
         $origin_file = $target_dir . basename($_FILES['uploadImage']['name']);
-        echo($_FILES['uploadImage']['name']);
-        echo("<br>");
-        echo($_FILES['uploadImage']['tmp_name']);
         $uploadOK = 1;
         $imageFileType = strtolower(pathinfo($target_dir . $origin_file,PATHINFO_EXTENSION));
         $target_file = $target_dir . $file_name  . "." . $imageFileType;
