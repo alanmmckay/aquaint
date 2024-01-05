@@ -4,33 +4,46 @@
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <!--style>
-            main{
-                width:75%;
-                margin:auto;
-                max-width:800px;
-            }
-            form{
-                margin:auto;
-            }
-            img{
-                width:95%;
-                margin: 1%
+        <style>
+            span#one{
+                color:white;
+                animation-name:fadein1;
+                animation-duration:3s;
+                animation-iteration-count: infinite;
             }
 
-            form p{
-                margin:1%;
-                margin-bottom:3%;
-                margin-top:0%;
+            span#two{
+                color:white;
+                animation-name:fadein2;
+                animation-duration:3s;
+                animation-iteration-count: infinite;
             }
-            .range input{
-                width:400px;
+
+            span#three{
+                color:white;
+                animation-name:fadein3;
+                animation-duration:3s;
+                animation-iteration-count: infinite;
             }
-            .range{
-                /*text-align:center;*/
-                padding-left:40px;
+
+            @keyframes fadein1 {
+                0%{color:white}
+                15%{color:black}
+                75%{color:black}
+                95%{color:white}
             }
-        </style-->
+            @keyframes fadein2 {
+                0%{color:white}
+                55%{color:black}
+                75%{color:black}
+                95%{color:white}
+            }
+            @keyframes fadein3 {
+                0%{color:white}
+                75%{color:black}
+                95%{color:white}
+            }
+        </style>
     </head>
     <body>
     <div class='container' style='max-width:800px;margin-top:15px;'>
@@ -40,9 +53,9 @@
 
 <?php
 //git config --global --add safe.directory /var/www/html/aquatint
-/*ini_set('display_errors', '1');
+ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);*/
+error_reporting(E_ALL);
 
     if(isset($_POST['submit'])){
         $target_dir = 'uploads/';
@@ -138,7 +151,6 @@ error_reporting(E_ALL);*/
                 $script = $script.$totalsweeps;
 
                 exec($script,$output,$result);
-
                 if(count($output) == 0 and $result == 0){
 
 ?>
@@ -214,7 +226,7 @@ error_reporting(E_ALL);*/
 
             <div class='form-group' style='clear:both'>
                 <input type='submit' value='Upload Image' name='submit' onclick='document.getElementById("wait").style.visibility = "visible";' style='float:left'/>
-                <p id='wait' style='visibility:hidden;float:left;margin-left:10px;'><b>Please wait...</b></p>
+                <p id='wait' style='visibility:hidden;float:left;margin-left:10px;'><b>Please wait<span id='one'>.</span><span id='two'>.</span><span id='three'>.</span></b></p>
             </div>
         </form>
 
