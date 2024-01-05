@@ -40,15 +40,32 @@
 
 <?php
 //git config --global --add safe.directory /var/www/html/aquatint
-//ini_set('display_errors',1);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 
     if(isset($_POST['submit'])){
         $target_dir = 'uploads/';
-        $target_file = $target_dir . basename($_FILES['uploadImage']['name']);
+
+        $file_name = '';
+        for($i = 0; $i <= rand(10,20); $i++){
+            $new_ord = rand(87,122);
+            if($new_ord >= 97){
+                $file_name = $file_name . chr($new_ord);
+            }else{
+                $file_name = $file_name . $new_ord;
+            }
+        }
+
+        $origin_file = $target_dir . basename($_FILES['uploadImage']['name']);
+        echo($_FILES['uploadImage']['name']);
+        echo("<br>");
+        echo($_FILES['uploadImage']['tmp_name']);
         $uploadOK = 1;
-        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $imageFileType = strtolower(pathinfo($target_dir . $origin_file,PATHINFO_EXTENSION));
+        $target_file = $target_dir . $file_name  . "." . $imageFileType;
         $check = exif_imagetype($_FILES['uploadImage']['tmp_name']);
-        $mimeType = image_type_to_mime_type($_FILES['uploadImage']['tmp_name']);
+        $mimeType = image_type_to_mime_type($check);
 
         if($check !== false){
             $uploadOk = 1;
@@ -66,6 +83,46 @@
             $uploadOk = 0;
         }
 
+        try{
+            $greycut = (float) $_POST['greycut'];
+            if($greycut < 0 || $greycut > 1){
+                echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
+                $uploadOk = 0;
+            }else{
+                $greycut = (string) $greycut;
+            }
+        }catch (Exception $ex){
+            echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
+            $uploadOk = 0;
+        }
+
+        try{
+            $temperature = (float) $_POST['temperature'];
+            if($temperature < 0.1 || $temperature > 10){
+                echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
+                $uploadOk = 0;
+            }else{
+                $temperature = (string) $temperature;
+            }
+        }catch (Exception $ex){
+            echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
+            $uploadOk = 0;
+        }
+
+        try{
+            $totalsweeps = (float) $_POST['totalsweeps'];
+            if($totalsweeps < 1 || $totalsweeps > 10){
+                echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
+                $uploadOk = 0;
+            }else{
+                $totalsweeps = (string) $totalsweeps;
+            }
+        }catch (Exception $ex){
+            echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
+            $uploadOk = 0;
+        }
+
+
         if($uploadOk == 0){
             echo '<div class="alert alert-warning">Your file was not uploaded.</div>';
         }else{
@@ -78,11 +135,10 @@
                 $new_file = $target_dir.$prefix.'-aquatint.jpg';
 
                 //echo 'The file '.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' has been uploaded.';
-
                 $script = 'python3 aquatintScript.py "'.$target_file.'" ';
-                $script = $script.$_POST['greycut'].' ';
-                $script = $script.$_POST['temperature'].' ';
-                $script = $script.$_POST['totalsweeps'];
+                $script = $script.$greycut.' ';
+                $script = $script.$temperature.' ';
+                $script = $script.$totalsweeps;
 
                 exec($script,$output,$result);
 
