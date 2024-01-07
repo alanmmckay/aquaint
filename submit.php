@@ -53,9 +53,9 @@
 
 <?php
 //git config --global --add safe.directory /var/www/html/aquatint
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+//ini_set('display_errors', '1');
+//ini_set('display_startup_errors', '1');
+//error_reporting(E_ALL);
 
     if(isset($_POST['submit'])){
         $target_dir = 'uploads/';
@@ -194,6 +194,10 @@ error_reporting(E_ALL);
         echo '<div class="alert alert-info"><a href="submit.php" class="alert-link">Process a new image</a></div>';
     }else{
 ?>
+
+        <div class='alert alert-info' style='clear:both' >
+            <strong>Note:</strong> This service is still in development.
+        </div>
         <form action='submit.php' method='post' enctype='multipart/form-data'>
             <div class='form-group'>
                 <label for='uploadImage'>Select a file to process:</label>
@@ -230,7 +234,6 @@ for($i = 0; $i <= rand(10,20); $i++){
         $file_name = $file_name . $new_ord;
     }
 }
-
 $json = file_get_contents("map.json");
 $json_data = json_decode($json,true);
 $json_data[$file_name] = array("status" => 0, "time" => time());
@@ -241,7 +244,7 @@ file_put_contents("map.json",json_encode($json_data));
 
 ?>
 
-            <div class='form-group' style='clear:both;'>
+            <div class='form-group' style='clear:both;display:none;'>
                 <input class='form-control' type='text' name='file_name' id='file_name' value=<?php echo $file_name; ?> >
                 <br>
             </div>
@@ -255,13 +258,11 @@ file_put_contents("map.json",json_encode($json_data));
             <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 0%" >
             </div>
         </div>
+        <div id='progress-text' class='alert alert-light' style='clear:both' >
+        </div>
 <?php
     }
 ?>
-    <br>
-    <div class='alert alert-info' style='clear:both' >
-        <strong>Note:</strong> This service is still in development.
-    </div>
     <script>
 
         query = function(filestring){
@@ -269,24 +270,35 @@ file_put_contents("map.json",json_encode($json_data));
             xmlhttp.onreadystatechange = function(){
                 if (this.readyState == 4 && this.status == 200){
                     result = this.responseText;
-                    //finished = JSON.parse(result)[0];
-                    //total = JSON.parse(result)[1];
-                    console.log(result);
+                    finished = JSON.parse(result)[0];
+                    total = JSON.parse(result)[1];
+                    ratio = (finished/total) * 100;
+                    new_width = '' + ratio + "%";
+                    document.getElementById('progress-bar').style.width = new_width;
+                    progress_text_object = document.getElementById('progress-text');
+                    if(finished == 0){
+                        progress_text_object.innerHTML = 'Step 1/'+total+'; Resizing original image...';
+                    }else if(finished == 1){
+                        progress_text_object.innerHTML = 'Step 2/'+total+'; Original image resized - Applying greycut...';
+                    }else if(finished == 2){
+                        progress_text_object.innerHTML = 'Step 3/'+total+'; Greycut applied - Applying temperature...';
+                    }else if(finished == 3){
+                        progress_text_object.innerHTML = 'Step 4/'+total+'; Greycut and Temperature applied - Applying sweep...';
+                    }else if(finished >= 4){
+                        progress_text_object.innerHTML = 'Step '+finished+'/'+total+'; Applying sweep...';
+                    }
                 }
             };
             xmlhttp.open("GET","status.php?id="+filestring,true);
             xmlhttp.send();
         }
 
-        setInterval(function(){
-            query('90j94snp95b92uu');
-        },3000);
-
         submit_process = function(filestring){
-            console.log(filename);
+            console.log(filestring);
             document.getElementById("wait").style.visibility = "visible";
-            // set width to 0%;
-            // set innerhtml
+            setInterval(function(){
+                query("<?php echo $file_name;?>");
+            },1000);
         }
 
         setSliderVal = function(sliderName,scew){
