@@ -8,6 +8,10 @@ temperature = float(sys.argv[3])
 totalsweeps = int(sys.argv[4])
 
 import numpy as np
+
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import scipy.misc
@@ -27,7 +31,7 @@ for i in range(0,totalsweeps):
     status_dict['sweeps']["sweep"+str(i)] = False
 
 write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
-print(json.dumps(status_dict))
+#print(json.dumps(status_dict))
 
 im2 = imageio.imread(filename)
 Nix=im2.shape[0]
@@ -51,7 +55,7 @@ plt.savefig(filename.split('.')[-2]+'-origin.jpg',dpi=300)
 status_dict["origin"] = True
 status_dict['finished'] += 1
 write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
-print(json.dumps(status_dict))
+#print(json.dumps(status_dict))
 
 #################################
 
@@ -71,7 +75,7 @@ sth=1
 status_dict['greycut'] = True
 status_dict['finished'] += 1
 write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
-print(json.dumps(status_dict))
+#print(json.dumps(status_dict))
 
 ########################
 Nx=Niy
@@ -82,7 +86,7 @@ beta=1/temperature
 status_dict['temperature'] = True
 status_dict['finished'] += 1
 write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
-print(json.dumps(status_dict))
+#print(json.dumps(status_dict))
 
 v=np.zeros(nsites)
 sig=2*v-1
@@ -109,7 +113,7 @@ for nsweeps in range(totalsweeps):
     status_dict['sweeps']['sweep'+str(nsweeps)] = True
     status_dict['finished'] += 1
     write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
-    print(json.dumps(status_dict))
+    #print(json.dumps(status_dict))
     pass
 
 hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
