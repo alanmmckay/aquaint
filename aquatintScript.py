@@ -11,8 +11,23 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import scipy.misc
+import json
 
-import imageio.v2 as imageio
+import imageio
+
+def write_to_json(filename,string):
+    f = open(filename, 'w')
+    f.write(string)
+    f.close()
+    return True
+
+
+status_dict = {"origin":False,"greycut":False,"temperature":False,"sweeps":dict(),"finished":0,"total":3+totalsweeps}
+for i in range(0,totalsweeps):
+    status_dict['sweeps']["sweep"+str(i)] = False
+
+write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+print(json.dumps(status_dict))
 
 im2 = imageio.imread(filename)
 Nix=im2.shape[0]
@@ -33,6 +48,11 @@ hsimage=plt.imshow(dsqin,cmap='Greys',aspect=1,interpolation='none')
 #cb = plt.colorbar(hsimage)
 plt.savefig(filename.split('.')[-2]+'-origin.jpg',dpi=300)
 
+status_dict["origin"] = True
+status_dict['finished'] += 1
+write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+print(json.dumps(status_dict))
+
 #################################
 
 nan=np.ndarray.flatten(dsqin)
@@ -46,13 +66,23 @@ for jj in range(nsites):
 dsq=np.reshape(hhbw,(Nix,Niy))
 hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
 plt.savefig(filename.split('.')[-2]+'-greycut.jpg',dpi=300)
-
 sth=1
+
+status_dict['greycut'] = True
+status_dict['finished'] += 1
+write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+print(json.dumps(status_dict))
+
 ########################
 Nx=Niy
 Ny=Nix
 nsites=Nx*Ny
 beta=1/temperature
+
+status_dict['temperature'] = True
+status_dict['finished'] += 1
+write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+print(json.dumps(status_dict))
 
 v=np.zeros(nsites)
 sig=2*v-1
@@ -76,6 +106,10 @@ for nsweeps in range(totalsweeps):
     dsq=np.reshape(v,(Ny,Nx))
     hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
     plt.savefig(filename.split('.')[-2]+'-sweep'+str(nsweeps)+'.jpg',dpi=300)
+    status_dict['sweeps']['sweep'+str(nsweeps)] = True
+    status_dict['finished'] += 1
+    write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+    print(json.dumps(status_dict))
     pass
 
 hsimage=plt.imshow(dsq,cmap='Greys',aspect=1,interpolation='none')
