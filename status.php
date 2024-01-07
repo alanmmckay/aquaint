@@ -24,7 +24,7 @@ if($valid == 1){
     try{
         $json = file_get_contents("uploads/".$_GET['id']."-status.json");
         $json_data = json_decode($json,true);
-        $return = array($json_data["finished"],$json_data["total"]);
+        $return = array($json_data["finished"],$json_data["total"],$json_data['rewrite']);
         echo json_encode($return);
     }catch(Exception $ex){
         echo $not_ready;

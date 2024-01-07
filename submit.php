@@ -277,7 +277,8 @@ file_put_contents("map.json",json_encode($json_data));
                     document.getElementById('progress-bar').style.width = new_width;
                     progress_text_object = document.getElementById('progress-text');
                     if(finished == 0){
-                        progress_text_object.innerHTML = 'Step 1/'+total+'; Resizing original image...';
+                        rewrite = JSON.parse(result)[2];
+                        progress_text_object.innerHTML = 'Step 1/'+total+'; Priming original image: ' + Math.ceil(rewrite * 100) + '% complete.';
                     }else if(finished == 1){
                         progress_text_object.innerHTML = 'Step 2/'+total+'; Original image resized - Applying greycut...';
                     }else if(finished == 2){
@@ -294,11 +295,10 @@ file_put_contents("map.json",json_encode($json_data));
         }
 
         submit_process = function(filestring){
-            console.log(filestring);
             document.getElementById("wait").style.visibility = "visible";
             setInterval(function(){
                 query("<?php echo $file_name;?>");
-            },1000);
+            },3000);
         }
 
         setSliderVal = function(sliderName,scew){

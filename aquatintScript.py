@@ -26,7 +26,7 @@ def write_to_json(filename,string):
     return True
 
 
-status_dict = {"origin":False,"greycut":False,"temperature":False,"sweeps":dict(),"finished":0,"total":3+totalsweeps}
+status_dict = {"origin":False,"greycut":False,"temperature":False,"sweeps":dict(),"finished":0,"total":3+totalsweeps,"rewrite":0}
 for i in range(0,totalsweeps):
     status_dict['sweeps']["sweep"+str(i)] = False
 
@@ -47,6 +47,9 @@ for i in range(0,Nix):
             grayValue = 0.07 * blueComponent + 0.72 * greenComponent + 0.21 * redComponent
             grayimage[i][j] = grayValue
             pass
+        status_dict['rewrite'] = i / Nix
+        write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+
 dsqin=1-grayimage/255.0
 hsimage=plt.imshow(dsqin,cmap='Greys',aspect=1,interpolation='none')
 #cb = plt.colorbar(hsimage)
