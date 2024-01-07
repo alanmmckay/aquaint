@@ -59,16 +59,11 @@ error_reporting(E_ALL);
 
     if(isset($_POST['submit'])){
         $target_dir = 'uploads/';
+        echo var_dump($_POST);
+        // !!! NEED TO VALIDATE THIS!
+        $file_name = $_POST['file_name'];
 
-        $file_name = '';
-        for($i = 0; $i <= rand(10,20); $i++){
-            $new_ord = rand(87,122);
-            if($new_ord >= 97){
-                $file_name = $file_name . chr($new_ord);
-            }else{
-                $file_name = $file_name . $new_ord;
-            }
-        }
+        // !!! NEED TO CHECK TO SEE IF 'CHOOSE FILE' WAS ACTUALLY SET!
 
         $origin_file = $target_dir . basename($_FILES['uploadImage']['name']);
         $uploadOK = 1;
@@ -224,12 +219,43 @@ error_reporting(E_ALL);
                 <p>Value: <span id='totalsweepsVal'></span></p>
             </div>
 
+<?php
+
+$file_name = '';
+for($i = 0; $i <= rand(10,20); $i++){
+    $new_ord = rand(87,122);
+    if($new_ord >= 97){
+        $file_name = $file_name . chr($new_ord);
+    }else{
+        $file_name = $file_name . $new_ord;
+    }
+}
+
+$json = file_get_contents("map.json");
+$json_data = json_decode($json,true);
+$json_data[$file_name] = array("status" => 0, "time" => time());
+file_put_contents("map.json",json_encode($json_data));
+// !!! Need to add logic to remove old entries
+// $currentTime = time();
+// last_updated_at <  $currentTime - (60*30)
+
+?>
+
+            <div class='form-group' style='clear:both;'>
+                <input class='form-control' type='text' name='file_name' id='file_name' value=<?php echo $file_name; ?> >
+                <br>
+            </div>
+
             <div class='form-group' style='clear:both'>
-                <input type='submit' value='Upload Image' name='submit' onclick='document.getElementById("wait").style.visibility = "visible";' style='float:left'/>
+                <input type='submit' value='Upload Image' name='submit' onclick="submit_process('<?php echo $file_name; ?>');" style='float:left'/>
                 <p id='wait' style='visibility:hidden;float:left;margin-left:10px;'><b>Please wait<span id='one'>.</span><span id='two'>.</span><span id='three'>.</span></b></p>
             </div>
         </form>
-
+        <div class="progress" style='clear:both'>
+            <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 50%" >
+                Text For progress bar
+            </div>
+        </div>
 <?php
     }
 ?>
@@ -238,6 +264,14 @@ error_reporting(E_ALL);
         <strong>Note:</strong> This service is still in development.
     </div>
     <script>
+
+        submit_process = function(filename){
+            console.log('yes');
+            console.log(filename);
+            document.getElementById("wait").style.visibility = "visible";
+            // set width to 0%;
+            // set innerhtml
+        }
 
         setSliderVal = function(sliderName,scew){
             slider = document.getElementById(sliderName);
