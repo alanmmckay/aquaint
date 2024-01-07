@@ -59,18 +59,18 @@ error_reporting(E_ALL);
 
     if(isset($_POST['submit'])){
         $target_dir = 'uploads/';
-        echo var_dump($_POST);
-        // !!! NEED TO VALIDATE THIS!
+
+        $uploadOK = 1;
+
+        // !!! need to validate this:
         $file_name = $_POST['file_name'];
 
-        // !!! NEED TO CHECK TO SEE IF 'CHOOSE FILE' WAS ACTUALLY SET!
-
         $origin_file = $target_dir . basename($_FILES['uploadImage']['name']);
-        $uploadOK = 1;
         $imageFileType = strtolower(pathinfo($target_dir . $origin_file,PATHINFO_EXTENSION));
         $target_file = $target_dir . $file_name  . "." . $imageFileType;
         $check = exif_imagetype($_FILES['uploadImage']['tmp_name']);
         $mimeType = image_type_to_mime_type($check);
+
 
         if($check !== false){
             $uploadOk = 1;
@@ -252,8 +252,7 @@ file_put_contents("map.json",json_encode($json_data));
             </div>
         </form>
         <div class="progress" style='clear:both'>
-            <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 50%" >
-                Text For progress bar
+            <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: 0%" >
             </div>
         </div>
 <?php
@@ -265,8 +264,25 @@ file_put_contents("map.json",json_encode($json_data));
     </div>
     <script>
 
-        submit_process = function(filename){
-            console.log('yes');
+        query = function(filestring){
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function(){
+                if (this.readyState == 4 && this.status == 200){
+                    result = this.responseText;
+                    //finished = JSON.parse(result)[0];
+                    //total = JSON.parse(result)[1];
+                    console.log(result);
+                }
+            };
+            xmlhttp.open("GET","status.php?id="+filestring,true);
+            xmlhttp.send();
+        }
+
+        setInterval(function(){
+            query('90j94snp95b92uu');
+        },3000);
+
+        submit_process = function(filestring){
             console.log(filename);
             document.getElementById("wait").style.visibility = "visible";
             // set width to 0%;
