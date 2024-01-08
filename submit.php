@@ -53,78 +53,104 @@
 
 <?php
 //git config --global --add safe.directory /var/www/html/aquatint
-//ini_set('display_errors', '1');
-//ini_set('display_startup_errors', '1');
-//error_reporting(E_ALL);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 
     if(isset($_POST['submit'])){
         $target_dir = 'uploads/';
 
-        $uploadOK = 1;
+        $uploadOk = 1;
 
-        // !!! need to validate this:
-        $file_name = $_POST['file_name'];
-
-        $origin_file = $target_dir . basename($_FILES['uploadImage']['name']);
-        $imageFileType = strtolower(pathinfo($target_dir . $origin_file,PATHINFO_EXTENSION));
-        $target_file = $target_dir . $file_name  . "." . $imageFileType;
-        $check = exif_imagetype($_FILES['uploadImage']['tmp_name']);
-        $mimeType = image_type_to_mime_type($check);
-
-
-        if($check !== false){
-            $uploadOk = 1;
-            if($_FILES['uploadImage']['size'] > 1048576){
-                echo '<div class="alert alert-danger"><strong>Warning!</strong> Sorry, your file is too large.</div>';
+        //Validate string form controls:
+        if(isset($_POST['file_name']) && isset($_FILES['uploadImage']['name'])){
+            if(strlen($_FILES['uploadImage']['name']) <= 0 || strlen($_POST['file_name']) <= 0){
+                //echo '<div class="alert alert-danger"><strong>Warning!</strong> File is not an image.</div>';
                 $uploadOk = 0;
+            }else{
+                $preg_result = preg_match("/\A([a-z0-9]+)\z/",$_POST['file_name']);
+                if($preg_result == 0){
+                    echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from altering hidden form.</div>';
+                    $uploadOk = 0;
+                }
+            }
+
+            if($uploadOk == 1){
+                $file_name = $_POST['file_name'];
+                $origin_file = $target_dir . basename($_FILES['uploadImage']['name']);
+                $imageFileType = strtolower(pathinfo($target_dir . $origin_file,PATHINFO_EXTENSION));
+                $target_file = $target_dir . $file_name  . "." . $imageFileType;
+                $check = exif_imagetype($_FILES['uploadImage']['tmp_name']);
+                $mimeType = image_type_to_mime_type($check);
             }
         }else{
-            echo '<div class="alert alert-danger"><strong>Warning!</strong> File is not an image.</div>';
             $uploadOk = 0;
         }
 
-        if($imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'jpeg' && $imageFileType != 'gif' && $mimeType == 'image/gif' && $mimeType == 'image/jpeg' && $mimeType == 'image/png'){
-            echo '<div class="alert alert-danger"><strong>Warning!</strong> Only jpg, jpeg, png, and gif files are allowed.</div>';
-            $uploadOk = 0;
+        //Validate filetype:
+        if($uploadOk == 1 ){
+            if($check !== false){
+                //$uploadOk = 1;
+                if($_FILES['uploadImage']['size'] > 1048576){
+                    echo '<div class="alert alert-danger"><strong>Warning!</strong> Sorry, your file is too large.</div>';
+                    $uploadOk = 0;
+                }
+            }else{
+                echo '<div class="alert alert-danger"><strong>Warning!</strong> File is not an image.</div>';
+                $uploadOk = 0;
+            }
+
+            if($imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'jpeg' && $imageFileType != 'gif' && $mimeType == 'image/gif' && $mimeType == 'image/jpeg' && $mimeType == 'image/png'){
+                echo '<div class="alert alert-danger"><strong>Warning!</strong> Only jpg, jpeg, png, and gif files are allowed.</div>';
+                $uploadOk = 0;
+            }
         }
 
-        try{
-            $greycut = (float) $_POST['greycut'];
-            if($greycut < 0 || $greycut > 1){
+        //Validate numeric form controls:
+        if($uploadOk == 1){
+
+            //Greycut:
+            try{
+                $greycut = (float) $_POST['greycut'];
+                if($greycut < 0 || $greycut > 1){
+                    echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
+                    $uploadOk = 0;
+                }else{
+                    $greycut = (string) $greycut;
+                }
+            }catch (Exception $ex){
                 echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
                 $uploadOk = 0;
-            }else{
-                $greycut = (string) $greycut;
             }
-        }catch (Exception $ex){
-            echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
-            $uploadOk = 0;
-        }
 
-        try{
-            $temperature = (float) $_POST['temperature'];
-            if($temperature < 0.1 || $temperature > 10){
+            //Temperature:
+            try{
+                $temperature = (float) $_POST['temperature'];
+                if($temperature < 0.1 || $temperature > 10){
+                    echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
+                    $uploadOk = 0;
+                }else{
+                    $temperature = (string) $temperature;
+                }
+            }catch (Exception $ex){
                 echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
                 $uploadOk = 0;
-            }else{
-                $temperature = (string) $temperature;
             }
-        }catch (Exception $ex){
-            echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
-            $uploadOk = 0;
-        }
 
-        try{
-            $totalsweeps = (float) $_POST['totalsweeps'];
-            if($totalsweeps < 1 || $totalsweeps > 10){
+            //Total Sweeps:
+            try{
+                $totalsweeps = (float) $_POST['totalsweeps'];
+                if($totalsweeps < 1 || $totalsweeps > 10){
+                    echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
+                    $uploadOk = 0;
+                }else{
+                    $totalsweeps = (string) $totalsweeps;
+                }
+            }catch (Exception $ex){
                 echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
                 $uploadOk = 0;
-            }else{
-                $totalsweeps = (string) $totalsweeps;
             }
-        }catch (Exception $ex){
-            echo '<div class="alert alert-danger"><strong>Warning!</strong> Please refrain from changing form values with the element inspector.</div>';
-            $uploadOk = 0;
+
         }
 
 
@@ -139,7 +165,6 @@
                 $suffix = $fileName['extension'];
                 $new_file = $target_dir.$prefix.'-aquatint.jpg';
 
-                //echo 'The file '.htmlspecialchars(basename($_FILES['uploadImage']['name'])).' has been uploaded.';
                 $script = 'python3 aquatintScript.py "'.$target_file.'" ';
                 $script = $script.$greycut.' ';
                 $script = $script.$temperature.' ';
