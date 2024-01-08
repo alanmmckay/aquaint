@@ -263,9 +263,16 @@ $json = file_get_contents("map.json");
 $json_data = json_decode($json,true);
 $json_data[$file_name] = array("status" => 0, "time" => time());
 file_put_contents("map.json",json_encode($json_data));
-// !!! Need to add logic to remove old entries
-// $currentTime = time();
-// last_updated_at <  $currentTime - (60*30)
+
+//Logic to trim old data within maps.json:
+$currentTime = time();
+$keepers = array();
+foreach($json_data as $key => $value){
+    if( ((int)$value["time"]) >= ((int)$currentTime - (60*30)) ){
+        $keepers[$key] = $value;
+    }
+}
+file_put_contents("map.json",json_encode($keepers));
 
 ?>
 
