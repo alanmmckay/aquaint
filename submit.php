@@ -53,9 +53,9 @@
 
 <?php
 //git config --global --add safe.directory /var/www/html/aquatint
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+//ini_set('display_errors', '1');
+//ini_set('display_startup_errors', '1');
+//error_reporting(E_ALL);
 
     if(isset($_POST['submit'])){
         $target_dir = 'uploads/';
@@ -316,9 +316,11 @@ file_put_contents("map.json",json_encode($keepers));
                     }else if(finished == 2){
                         progress_text_object.innerHTML = 'Step 3/'+total+'; Greycut applied - Applying temperature...';
                     }else if(finished == 3){
-                        progress_text_object.innerHTML = 'Step 4/'+total+'; Greycut and Temperature applied - Applying sweep...';
+                        rewrite = JSON.parse(result)[2];
+                        progress_text_object.innerHTML = 'Step 4/'+total+'; Greycut and Temperature applied - Applying first sweep: ' + Math.ceil(rewrite * 100) + '% complete.';
                     }else if(finished >= 4){
-                        progress_text_object.innerHTML = 'Step '+finished+'/'+total+'; Applying sweep...';
+                        rewrite = JSON.parse(result)[2];
+                        progress_text_object.innerHTML = 'Step '+finished+'/'+total+'; Applying sweep: ' + Math.ceil(rewrite * 100) + '% complete.';
                     }
                 }
             };

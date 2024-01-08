@@ -49,6 +49,7 @@ for i in range(0,Nix):
             pass
         status_dict['rewrite'] = i / Nix
         write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+status_dict["rewrite"] = 0
 
 dsqin=1-grayimage/255.0
 hsimage=plt.imshow(dsqin,cmap='Greys',aspect=1,interpolation='none')
@@ -96,6 +97,9 @@ sig=2*v-1
 sumen=0
 
 for nsweeps in range(totalsweeps):
+    quarter = True
+    half = True
+    threequarter = True
     for npick in range(nsites):
         xx=np.random.randint(Nx)
         yy=np.random.randint(Ny)
@@ -108,6 +112,18 @@ for nsweeps in range(totalsweeps):
             probflip=np.exp(-2*local)
             if pp<=probflip:
                 sig[xx+Nx*yy]*=(-1)
+        if quarter == True and (npick / nsites) >= .25:
+            status_dict['rewrite'] = npick / nsites
+            write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+            quarter = False
+        if quarter == False and half == True and (npick / nsites) >= .5:
+            status_dict['rewrite'] = npick / nsites
+            write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+            half = False
+        if quarter == False and half == False and threequarter == True and (npick / nsites) >= .75:
+            status_dict['rewrite'] = npick / nsites
+            write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
+            threequarter = False
         pass
     v=((sig+1)/2)
     dsq=np.reshape(v,(Ny,Nx))
