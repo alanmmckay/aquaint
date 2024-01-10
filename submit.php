@@ -310,7 +310,7 @@ file_put_contents("map.json",json_encode($keepers));
                     progress_text_object = document.getElementById('progress-text');
                     if(finished == 0){
                         rewrite = JSON.parse(result)[2];
-                        progress_text_object.innerHTML = 'Step 1/'+total+'; Priming original image: ' + Math.ceil(rewrite * 100) + '% complete.';
+                        progress_text_object.innerHTML = 'Step 1/'+total+'; Resizing and applying greyscale to original image: ' + Math.ceil(rewrite * 100) + '% complete.';
                     }else if(finished == 1){
                         progress_text_object.innerHTML = 'Step 2/'+total+'; Original image resized - Applying greycut...';
                     }else if(finished == 2){
@@ -320,7 +320,7 @@ file_put_contents("map.json",json_encode($keepers));
                         progress_text_object.innerHTML = 'Step 4/'+total+'; Greycut and Temperature applied - Applying first sweep: ' + Math.ceil(rewrite * 100) + '% complete.';
                     }else if(finished >= 4){
                         rewrite = JSON.parse(result)[2];
-                        progress_text_object.innerHTML = 'Step '+finished+'/'+total+'; Applying sweep: ' + Math.ceil(rewrite * 100) + '% complete.';
+                        progress_text_object.innerHTML = 'Step '+(finished+1)+'/'+total+'; Applying sweep: ' + Math.ceil(rewrite * 100) + '% complete.';
                     }
                 }
             };
