@@ -1,0 +1,9 @@
+<Files "map.json">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "aquatintScript.py">
+    Order Allow,Deny
+    Deny from all
+</Files>
