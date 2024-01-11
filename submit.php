@@ -100,10 +100,18 @@
                 $uploadOk = 0;
             }
 
-            if($imageFileType != 'jpg' && $imageFileType != 'png' && $imageFileType != 'jpeg' && $imageFileType != 'gif' && $mimeType == 'image/gif' && $mimeType == 'image/jpeg' && $mimeType == 'image/png'){
+            #If one of the following conditions are satisfied, then the imagefiletype is good:
+            if( ($imageFileType != 'jpg') && ($imageFileType != 'png') && ($imageFileType != 'jpeg') && ($imageFileType != 'gif') ){
+                echo '<div class="alert alert-danger"><strong>Warning!</strong> Only jpg, jpeg, png, and gif files are allowed.</div>';
+                $uploadOk = 0;
+            }else
+
+            #If one of the following conditions are satisfied, then the mimetype is good:
+            if( ($mimeType != 'image/gif') && ($mimeType != 'image/jpeg') && ($mimeType != 'image/png') ){
                 echo '<div class="alert alert-danger"><strong>Warning!</strong> Only jpg, jpeg, png, and gif files are allowed.</div>';
                 $uploadOk = 0;
             }
+
         }
 
         //Validate numeric form controls:
