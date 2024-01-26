@@ -31,7 +31,7 @@ for i in range(0,totalsweeps):
 write_to_json(filename.split('.')[-2]+'-status.json',json.dumps(status_dict))
 #print(json.dumps(status_dict))
 
-im2 = imageio.imread(filename)
+im2 = imageio.v2.imread(filename)
 Nix=im2.shape[0]
 Niy=im2.shape[1]
 grayimage=np.zeros([Nix,Niy])

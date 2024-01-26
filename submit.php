@@ -59,13 +59,11 @@
 
     if(isset($_POST['submit'])){
         $target_dir = 'uploads/';
-
         $uploadOk = 1;
 
         //Validate string form controls:
         if(isset($_POST['file_name']) && isset($_FILES['uploadImage']['name'])){
             if(strlen($_FILES['uploadImage']['name']) <= 0 || strlen($_POST['file_name']) <= 0){
-                //echo '<div class="alert alert-danger"><strong>Warning!</strong> File is not an image.</div>';
                 $uploadOk = 0;
             }else{
                 $preg_result = preg_match("/\A([a-z0-9]+)\z/",$_POST['file_name']);
@@ -328,7 +326,7 @@ file_put_contents("map.json",json_encode($keepers));
                         progress_text_object.innerHTML = 'Step 4/'+total+'; Greycut and Temperature applied - Applying first sweep: ' + Math.ceil(rewrite * 100) + '% complete.';
                     }else if(finished >= 4){
                         rewrite = JSON.parse(result)[2];
-                        progress_text_object.innerHTML = 'Step '+(finished+1)+'/'+total+'; Applying sweep: ' + Math.ceil(rewrite * 100) + '% complete.';
+                        progress_text_object.innerHTML = 'Step '+Math.min(total,(finished+1))+'/'+total+'; Applying sweep: ' + Math.ceil(rewrite * 100) + '% complete.';
                     }
                 }
             };
